@@ -1,6 +1,10 @@
 package academy.devdojo.springboot2essentials.service;
 
 import academy.devdojo.springboot2essentials.domain.Anime;
+import academy.devdojo.springboot2essentials.repository.AnimeRepository;
+import academy.devdojo.springboot2essentials.request.AnimeDto;
+import lombok.Builder;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -11,36 +15,34 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
+@RequiredArgsConstructor
 @Service
+@Builder
 public class AnimeService {
-    private static List<Anime> animes;
+    private final AnimeRepository animeRepository;
 
-    static {
-        animes = new ArrayList<>(List.of(new Anime(1L,"db1"), new Anime(2L,"db1")));
+
+
+    public List<Anime> listAll() {
+        return animeRepository.findAll();
     }
 
-    public List<Anime> listAll(){
-        return animes;
-    }
-
-    public Anime findById(long id){
-        return animes.stream()
-                .filter(anime -> anime.getId().equals(id))
-                .findFirst()
+    public Anime findById(long id) {
+        return animeRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Anime not Found"));
     }
-    public Anime save(Anime anime) {
-        anime.setId(ThreadLocalRandom.current().nextLong(3,100000));
-        animes.add(anime);
+
+    public Anime save(AnimeDto animeDto) {
+        Anime anime = Anime.builder().name(animeDto.getName()).build();
         return anime;
     }
 
-    public void delete(long id) {
-        animes.remove(findById(id));
-    }
-
-    public void replace(Anime anime) {
-        delete(anime.getId());
-        animes.add(anime);
-    }
+//    public void delete(long id) {
+//        animes.remove(findById(id));
+//    }
+//
+//    public void replace(Anime anime) {
+//        delete(anime.getId());
+//        animes.add(anime);
+//    }
 }
