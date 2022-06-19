@@ -1,4 +1,4 @@
-package academy.devdojo.springboot2essentials.domain;
+package academy.devdojo.springboot2.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,8 +16,9 @@ import javax.persistence.Id;
 @Entity
 @Builder
 public class Anime {
-
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+
 }
