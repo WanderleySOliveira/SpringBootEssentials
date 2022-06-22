@@ -17,9 +17,14 @@ import java.util.List;
 public class AnimeService {
 
     private final AnimeRepository animeRepository;
+    private final AnimeMapper animeMapper;
 
     public List<Anime> listAll() {
         return animeRepository.findAll();
+    }
+
+    public List<Anime> findByName(String name) {
+        return animeRepository.findByName(name);
     }
 
     public Anime findByIdOrThrowBadRequestException(long id) {
@@ -28,7 +33,7 @@ public class AnimeService {
     }
 
     public Anime save(AnimePostRequestBody animePostRequestBody) {
-        return animeRepository.save(AnimeMapper.INSTANCE.toAnime(animePostRequestBody));
+        return animeRepository.save(animeMapper.toAnime(animePostRequestBody));
     }
 
     public void delete(long id) {
@@ -37,8 +42,10 @@ public class AnimeService {
 
     public void replace(AnimePutRequestBody animePutRequestBody) {
         Anime savedAnime = findByIdOrThrowBadRequestException(animePutRequestBody.getId());
-        Anime anime = AnimeMapper.INSTANCE.toAnime(animePutRequestBody);
+        Anime anime = animeMapper.toAnime(animePutRequestBody);
         anime.setId(savedAnime.getId());
         animeRepository.save(anime);
     }
+
+
 }
