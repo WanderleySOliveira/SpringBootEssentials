@@ -4,11 +4,15 @@ import academy.devdojo.springboot2.domain.Anime;
 import academy.devdojo.springboot2.exception.BadRequestException;
 import academy.devdojo.springboot2.mapper.AnimeMapper;
 import academy.devdojo.springboot2.repository.AnimeRepository;
+import academy.devdojo.springboot2.requests.AnimePatchRequestBody;
 import academy.devdojo.springboot2.requests.AnimePostRequestBody;
 import academy.devdojo.springboot2.requests.AnimePutRequestBody;
+import academy.devdojo.springboot2.util.NullAwareBeanUtilsBean;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 @Service
@@ -17,6 +21,7 @@ public class AnimeService {
 
     private final AnimeRepository animeRepository;
     private final AnimeMapper animeMapper;
+    private final NullAwareBeanUtilsBean nullAwareBeanUtilsBean;
 
     public List<Anime> listAll() {
         return animeRepository.findAll();
@@ -44,6 +49,11 @@ public class AnimeService {
         Anime anime = animeMapper.toAnime(animePutRequestBody);
         anime.setId(savedAnime.getId());
         animeRepository.save(anime);
+    }
+
+    public Anime update(AnimePatchRequestBody animePatchRequestBody, ResponseEntity<Anime> animeResponseEntity) throws InvocationTargetException, IllegalAccessException {
+        nullAwareBeanUtilsBean.copyProperties(animePatchRequestBody, animeResponseEntity);
+         return animeRepository.save(animeMapper.toAnimeOfAnimePatch(animePatchRequestBody));
     }
 
 

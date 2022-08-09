@@ -1,16 +1,18 @@
 package academy.devdojo.springboot2.exception;
 
-import lombok.Getter;
+import lombok.Data;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 
-@Getter
+@Data
 @SuperBuilder
-public class BadRequestExceptionDetails extends ExceptionDetails{
+public class ExceptionDetails {
     private String title;
     private int status;
     private String details;
     private String developerMessage;
     private LocalDateTime timestamp;
+
+
 }
